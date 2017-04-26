@@ -35,7 +35,7 @@ public class NSImpl{
 	}
 
 	/**
-	 * Reads your js script
+	 * Read your js script
 	 * 
 	 */
 	private void scriptReader() {
