@@ -7,11 +7,12 @@ Couple of topics:
 4. Multithreaded Nashorn prompts (This is under progress, NSThread.java)
 
 In examples, we're referring FetchFile.getInput method to read script file. Here is a code snippet for that method as well:
+```Java
 InputStream getInput(String path) {
     InputStream in = getClass().getClassLoader().getResourceAsStream(path);
     return in;
 }
-
+```
 I don't prefer to write multiple classes & use them as object, I prefer stand alone examples which is easier to understand and use. You can break each of these java files into multiple classes as per your requirement to make them easily accessible as per required.
 
 Refer following to know more about Nashorn's methods & variables:
@@ -29,69 +30,47 @@ By default we've rhino engine for execution of any kind of javascript methods, w
 Nashorn's goal is to implement a lightweight high-performance JavaScript runtime in Java with a native JVM. This Project intends to enable Java developers embedding of JavaScript in Java applications via JSR-223 and to develop free standing JavaScript applications using the jrunscript command-line tool.
 
 
-jjs
+# jjs
 For Nashorn engine, JAVA 8 introduces a new command line tool, jjs, to execute javascript codes at console.
 
 Interpreting js File
 Create and save the file sample.js in c:\> JAVA folder.
 
 sample.js
+```js
 print('Hello World!');
-Open console and use the following command.
+```
 
+Open console and use the following command.
 $jjs sample.js
 It will produce the following output:
-
 Hello World!
-jjs in Interactive Mode
-Open the console and use the following command.
-
-$jjs
-jjs> print("Hello, World!")
-Hello, World!
-jjs> quit()
->>
-Pass Arguments
-Open the console and use the following command.
-
-$jjs -- a b c
-jjs> print('letters: ' +arguments.join(", "))
-letters: a, b, c
-jjs>
 
 
-
-Calling JavaScript from Java
+# Calling JavaScript from Java
 Using ScriptEngineManager, JavaScript code can be called and interpreted in Java.
 
 Example
 Create the following Java program using any editor of your choice in, say, C:\> JAVA.
-
-Java8Tester.java
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
-
+```Java
 public class Java8Tester {
    public static void main(String args[]){
    
       ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-      ScriptEngine nashorn = scriptEngineManager.getEngineByName("nashorn");
-		
+      ScriptEngine nashorn = scriptEngineManager.getEngineByName("nashorn");		
       String name = "Mahesh";
-      Integer result = null;
-      
+      Integer result = null;      
       try {
          nashorn.eval("print('" + name + "')");
          result = (Integer) nashorn.eval("10 + 2");
          
       }catch(ScriptException e){
          System.out.println("Error executing script: "+ e.getMessage());
-      }
-      
+      }      
       System.out.println(result.toString());
    }
-}
+  }
+```  
 Verify the Result
 Compile the class using javac compiler as follows −
 
@@ -106,22 +85,18 @@ Mahesh
 Calling Java from JavaScript
 The following example explains how to import and use Java classes in java script −
 
-sample.js
+```sample.js
 var BigDecimal = Java.type('java.math.BigDecimal');
-
 function calculate(amount, percentage) {
-
    var result = new BigDecimal(amount).multiply(
-   new BigDecimal(percentage)).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_EVEN);
-   
+   new BigDecimal(percentage)).divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_EVEN);   
    return result.toPlainString();
 }
-
+```
 var result = calculate(568000000000000000023,13.9);
 print(result);
 Open the console and use the following command.
 
 $jjs sample.js
 It should produce the following output −
-
 78952000000000000003.20
