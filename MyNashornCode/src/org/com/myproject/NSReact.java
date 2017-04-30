@@ -15,8 +15,6 @@ import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
 import org.com.helper.FetchFile;
 import org.osgi.service.component.ComponentContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @CKJ : Contact ckj0369@gmail.com for any more information on this or to add
@@ -28,7 +26,6 @@ import org.slf4j.LoggerFactory;
 public class NSReact {
 
 	private static ScriptEngine nashorn;
-	private static final Logger LOGGER = LoggerFactory.getLogger(NSReact.class);
 	private static Invocable invEngine;
 	private static CompiledScript script;
 
@@ -43,28 +40,21 @@ public class NSReact {
 	 * 
 	 */
 	private void scriptReader() {
-		InputStream file = null;
+		String file = "E:/script-react.js";
 		try {
-			file = FetchFile.getInput("e://script.js"); // FetchFile class has
-														// method getInput to
-														// convert a file from
-														// physical path to an
-														// InputStream file
+			try {
 			if (null != file) {
-				Reader reader = new InputStreamReader(file, "UTF-8");
-				if (nashorn instanceof Compilable) {
-					script = ((Compilable) nashorn).compile(reader);
-					script.eval();
-				} else {
-					nashorn.eval(reader);
-				}
+				FileInputStream inputStream = new FileInputStream(file);
+				Reader reader = new InputStreamReader(inputStream, "UTF-8");
+				nashorn.eval(reader);
+				invEngine = (Invocable) nashorn;
 				reader.close();
 				reader = null;
 			}
 		} catch (UnsupportedEncodingException exception) {
-			LOGGER.error("Not able to read script" + exception.getMessage());
+			System.out.println("Not able to read script" + exception.getMessage());
 		} catch (Exception exception) {
-			LOGGER.error("Unexpected error occured while processing the JS file" + exception.getMessage());
+			System.out.println("Unexpected error occured while processing the JS file" + exception.getMessage());
 		}
 	}
 
@@ -80,10 +70,6 @@ public class NSReact {
 		String parse = null;
 		try {
 			if (null != componentJson) {
-				componentJson = componentName.replaceAll("(?m)(?<crlf>\r?\n)", ""); // Replace
-																					// all
-																					// lines,tabs
-																					// etc
 				Object reactObj = invEngine.invokeFunction("renderMethod", componentName, componentJson);
 				parse = formHTML(reactObj.toString(), componentName, componentJson);
 			}
@@ -91,19 +77,6 @@ public class NSReact {
 			LOGGER.info("Nashorn Exception  : Not able to execute - Due to following error: ", e.getMessage());
 		}
 		return parse;
-	}
-
-	/*
-	 * This function takes your div tags and contents and form a markup code to
-	 * provide a proper preview, Please note this might change as per your react
-	 * requirements
-	 * 
-	 */
-
-	private static String formHTML(String reactObj, String componentName, String componentJson) {
-		String returnValue = String.format("<div data-component=\"%s\" data-props=\"%s\">%s</div></div>", componentName,
-				componentJson, StringEscapeUtils.unescapeHtml4(reactObj));
-		return returnValue;
 	}
 
 }
