@@ -8,7 +8,6 @@ Couple of topics:
 1. Implmenting Nashorn Example - the best practice in terms of performance (NSimpl.java)
 2. Using Nashorn for rendering React JS (NSReact.java)
 3. Nashorn Service where you can configure js files as per your project (NSConfig.java)
-4. Multithreaded Nashorn prompts (This is under progress, NSThread.java)
 
 In examples, we're referring FetchFile.getInput method to read script file. Here is a code snippet for that method as well:
 ```Java
