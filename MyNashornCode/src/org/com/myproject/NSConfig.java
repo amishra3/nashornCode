@@ -82,9 +82,9 @@ public class NSConfig {
 		InputStream file = null;
 		try {
 				for (int i = 0; i < this.multiString.length; i++) {
-					file =FetchFile.getInput(this.multiString[i]); 
-					if (null != file) {
-						Reader reader = new InputStreamReader(file, "UTF-8");
+					FileInputStream inputStream = new FileInputStream(this.multiString[i]);
+					if (null != inputStream) {
+						Reader reader = new InputStreamReader(inputStream, "UTF-8");
 						this.nashorn.eval(reader);					
 					}
 				}
@@ -103,35 +103,17 @@ public class NSConfig {
 	 * as componentJson
 	 * 
 	 */
-	public synchronized String evaluateComponent(String componentName, String componentJson) {
-		invEngine = (Invocable) nashorn;
+	public synchronized String evaluateComponent(String params) {
 		String parse = null;
 		try {
-			if (null != componentJson) {
-				componentJson = componentName.replaceAll("(?m)(?<crlf>\r?\n)", ""); // Replace
-																					// all
-																					// lines,tabs
-																					// etc
-				Object reactObj = invEngine.invokeFunction("renderMethod", componentName, componentJson);
-				parse = formHTML(reactObj.toString(), componentName, componentJson);
+			if (null != params) {
+				Object reactObj = invEngine.invokeFunction("renderMethod", params);
+				parse = reactObj.toString();
 			}
 		} catch (Exception e) {
-			LOGGER.info("Nashorn Exception  : Not able to execute - Due to following error: ", e.getMessage());
-		}
+			System.out.println("Nashorn Exception  : Not able to execute - Due to following error: "+ e.getMessage());
+		}	
 		return parse;
-	}
-
-	/*
-	 * This function takes your div tags and contents and form a markup code to
-	 * provide a proper preview, Please note this might change as per your react
-	 * requirements
-	 * 
-	 */
-
-	private static String formHTML(String reactObj, String componentName, String componentJson) {
-		String returnValue = String.format("<div data-component=\"%s\" data-props=\"%s\">%s</div></div>", componentName,
-				componentJson, StringEscapeUtils.unescapeHtml4(reactObj));
-		return returnValue;
 	}
 
 }
