@@ -3,17 +3,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import javax.script.Compilable;
-import javax.script.CompiledScript;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Service;
-import org.com.helper.FetchFile;
-import org.osgi.service.component.ComponentContext;
-
 /**
  * @CKJ : Contact ckj0369@gmail.com for any more information on this or to add anything in this which can improve this codebase.
  *
@@ -24,14 +19,12 @@ public class NSImpl{
 
 	private static ScriptEngine nashorn;
 	private static Invocable invEngine;
-	private static CompiledScript script;
 
 	@Activate
-	protected void activate(ComponentContext context) {
+	protected void activate() {
 		nashorn = new ScriptEngineManager().getEngineByName("JavaScript");
 		scriptReader();
 	}
-
 	/**
 	 * Read your js script
 	 * 
@@ -49,9 +42,9 @@ public class NSImpl{
 				reader = null;
 			}
 		} catch (UnsupportedEncodingException exception) {
-			System.out.println("Not able to read script" + exception.getMessage());
+			System.out.println(exception.getMessage());
 		} catch (Exception exception) {
-			System.out.println("Unexpected error occured while processing the JS file" + exception.getMessage());
+			System.out.println(exception.getMessage());
 		}
 	}
 
@@ -67,9 +60,8 @@ public class NSImpl{
 				parse = reactObj.toString();
 			}
 		} catch (Exception e) {
-			System.out.println("Nashorn Exception  : Not able to execute - Due to following error: "+ e.getMessage());
+			System.out.println(e.getMessage());
 		}	
 		return parse;
 	}
-
 }
