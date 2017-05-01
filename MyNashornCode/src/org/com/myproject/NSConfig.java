@@ -1,46 +1,23 @@
 package org.com.myproject;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import javax.script.Compilable;
-import javax.script.CompiledScript;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.PropertyUnbounded;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.sling.api.resource.ResourceResolverFactory;
-import org.apache.sling.commons.json.JSONObject;
-import org.com.helper.FetchFile;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.ComponentContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.apache.felix.scr.annotations.Service;
 
 /**
  * @CKJ : Contact ckj0369@gmail.com for any more information on this or to add
  *      anything in this which can improve this codebase.
- *
  */
 @Component(configurationFactory = true, immediate = true, metatype = true, label = "Nashorn Project 1", description = "Fastest Execution Example")
 @Service(value = NSConfig.class)
 public class NSConfig {
-
-	private static ScriptEngine nashorn;
-	private static final Logger LOGGER = LoggerFactory.getLogger(NSConfig.class);
-	private static Invocable invEngine;
-	private static CompiledScript script;
-	
-	
+	private static ScriptEngine e;	
+	private static Invocable invEngine;	
 	private static ResourceResolverFactory resourceResolverFactory;
 	private static BundleContext bundleContext;
 
@@ -59,24 +36,22 @@ public class NSConfig {
 	private String [] multiString; 
 	
 	public String[] getMultiString()
-    {
-        return this.multiString;
-    }
+    	{
+        	return this.multiString;
+    	}
 
 	protected String getSiteRootPath() {
 		return SITE_ROOT_PATH;
 	}
 
-
 	@Activate
 	protected void activate(ComponentContext context) {
-		nashorn = new ScriptEngineManager().getEngineByName("JavaScript");
+		e = new ScriptEngineManager().getEngineByName("JavaScript");
 		scriptReader();
 	}
 
 	/**
-	 * Read your js script
-	 * 
+	 * Read multiple js script for any project, for multiple projects fetching you need to write your own logic
 	 */
 	private void scriptReader() {
 		InputStream file = null;
@@ -85,14 +60,14 @@ public class NSConfig {
 					FileInputStream inputStream = new FileInputStream(this.multiString[i]);
 					if (null != inputStream) {
 						Reader reader = new InputStreamReader(inputStream, "UTF-8");
-						this.nashorn.eval(reader);					
+						this.e.eval(reader);
+						invEngine = (Invocable) e;
 					}
-				}
-				
+				}				
 		} catch (UnsupportedEncodingException exception) {
-			LOGGER.error("Not able to read script" + exception.getMessage());
+			System.out.println(exception.getMessage());
 		} catch (Exception exception) {
-			LOGGER.error("Unexpected error occured while processing the JS file" + exception.getMessage());
+			System.out.println(exception.getMessage());
 		}
 	}
 
@@ -115,5 +90,4 @@ public class NSConfig {
 		}	
 		return parse;
 	}
-
 }
