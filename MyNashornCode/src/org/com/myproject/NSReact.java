@@ -1,7 +1,10 @@
 package org.com.myproject;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -60,7 +63,7 @@ public class NSReact {
 				parse = reactObj.toString();
 			}
 		} catch (Exception e) {
-			System.out.println("Execution failed due to : ", e.getMessage());
+			System.out.println("Execution failed due to : "+ e.getMessage());
 		}
 		return parse;
 	}
